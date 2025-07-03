@@ -1,0 +1,17 @@
+server:
+  port: 9999
+
+spring:
+  #  数据源配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/x-admin-template?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # redis配置
+  redis:
+    host: localhost
+    port: 6379
+  logging:
+    level:
+      com.ziling.xaming: DEBUG

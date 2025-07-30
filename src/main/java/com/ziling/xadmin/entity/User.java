@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
 
 /**
  * <p>
@@ -30,7 +32,7 @@ public class User implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @TableField("username")
+    @TableField("user_name")
     private String username;
 
     @TableField("password")
@@ -47,6 +49,9 @@ public class User implements Serializable {
 
     @TableField("status")
     private Byte status;
+
+    @TableField("sex")
+    private Byte sex;
 
     @TableField("created_at")
     private LocalDateTime createdAt;

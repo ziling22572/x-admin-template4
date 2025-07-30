@@ -15,3 +15,13 @@ spring:
   logging:
     level:
       com.ziling.xaming: DEBUG
+# MyBatis-Plus 日志打印配置
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 控制台输出SQL日志
+
+logging:
+  level:
+    com.ziling.xaming: DEBUG
+    com.baomidou.mybatisplus: DEBUG      # 打印 MyBatis-Plus 的日志
+    org.apache.ibatis: DEBUG

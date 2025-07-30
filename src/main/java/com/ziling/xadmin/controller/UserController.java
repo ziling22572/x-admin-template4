@@ -1,5 +1,8 @@
 package com.ziling.xadmin.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ziling.xadmin.common.R;
 import com.ziling.xadmin.entity.Menu;
 import com.ziling.xadmin.entity.User;
@@ -10,6 +13,7 @@ import com.ziling.xadmin.vo.UserDeptVO;
 import com.ziling.xadmin.vo.UserRoleVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -68,6 +72,40 @@ public class UserController {
         map.put("depts", currentUser.getDepts().stream().map(UserDeptVO::getDeptName).distinct().toArray());
         map.put("menus", currentUser.getMenus().stream().map(Menu::getName).distinct().toArray());
         return R.data(map);
+    }
+
+
+    @GetMapping("/list")
+    @ApiModelProperty(value = "用户列表")
+    public R getUserList(@RequestParam(value = "pageNo", required = false) Long pageNo, @RequestParam(value = "pageSize", required = false) Long pageSize, User user) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.hasLength(user.getUsername())) {
+            queryWrapper.like(User::getUsername, user.getUsername());
+        }
+        if (StringUtils.hasLength(user.getPhone())) {
+            queryWrapper.like(User::getPhone, user.getPhone());
+        }
+        Page<User> page = new Page<>(pageNo, pageSize);
+        Page<User> userPage = userService.page(page, queryWrapper);
+        Map<String, Object> map = new HashMap<>();
+        map.put("total", userPage.getTotal());
+        map.put("rows", userPage.getRecords());
+        return R.data(map);
+    }
+
+    @PostMapping("/add")
+    @ApiModelProperty(value = "用户列表")
+    public R addUser(@RequestBody User user) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.hasLength(user.getPhone())) {
+            queryWrapper.eq(User::getPhone, user.getPhone());
+        }
+        // 校验用户手机号对应的用户已经存在了
+        if (userService.getOne(queryWrapper) != null) {
+            return R.fail("用户手机号已经存在");
+        }
+        boolean save = userService.save(user);
+        return R.success("添加用户成功");
     }
 
 

@@ -104,7 +104,7 @@ public class UserController {
         if (userService.getOne(queryWrapper) != null) {
             return R.fail("用户手机号已经存在");
         }
-        boolean save = userService.save(user);
+        userService.save(user);
         return R.success("添加用户成功");
     }
 

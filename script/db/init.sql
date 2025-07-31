@@ -75,14 +75,15 @@ create table x_user
     email      varchar(128)                       null,
     phone      varchar(20)                        null,
     status     tinyint  default 1                 null,
+    sex     tinyint  default 1                 null,
     created_at datetime default CURRENT_TIMESTAMP null,
     updated_at datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
     constraint username
         unique (username)
 );
-INSERT INTO `x-admin-template`.x_user (id, user_name, password, avatar, email, phone, status, created_at, updated_at) VALUES (1, 'alice', 'password123', 'https://example.com/avatar/alice.png', 'alice@example.com', '1234567890', 1, '2025-06-12 18:25:23', '2025-06-12 18:25:23');
-INSERT INTO `x-admin-template`.x_user (id, user_name, password, avatar, email, phone, status, created_at, updated_at) VALUES (2, 'bob', 'password456', 'https://example.com/avatar/bob.png', 'bob@example.com', '2345678901', 1, '2025-06-12 18:25:23', '2025-06-12 18:25:23');
-INSERT INTO `x-admin-template`.x_user (id, user_name, password, avatar, email, phone, status, created_at, updated_at) VALUES (3, 'charlie', 'password789', 'https://example.com/avatar/charlie.png', 'charlie@example.com', '3456789012', 1, '2025-06-12 18:25:23', '2025-06-12 18:25:23');
+INSERT INTO `x-admin-template`.x_user (id, user_name, password, avatar, email, phone, status,sex, created_at, updated_at) VALUES (1, 'alice', 'password123', 'https://example.com/avatar/alice.png', 'alice@example.com', '1234567890', 1, 1,'2025-06-12 18:25:23', '2025-06-12 18:25:23');
+INSERT INTO `x-admin-template`.x_user (id, user_name, password, avatar, email, phone, status,sex, created_at, updated_at) VALUES (2, 'bob', 'password456', 'https://example.com/avatar/bob.png', 'bob@example.com', '2345678901', 1,1, '2025-06-12 18:25:23', '2025-06-12 18:25:23');
+INSERT INTO `x-admin-template`.x_user (id, user_name, password, avatar, email, phone, status,sex, created_at, updated_at) VALUES (3, 'charlie', 'password789', 'https://example.com/avatar/charlie.png', 'charlie@example.com', '3456789012', 1,1, '2025-06-12 18:25:23', '2025-06-12 18:25:23');
 
 
 create table x_user_dept

@@ -85,6 +85,7 @@ public class UserController {
         if (StringUtils.hasLength(user.getPhone())) {
             queryWrapper.like(User::getPhone, user.getPhone());
         }
+        queryWrapper.orderByDesc(User::getCreatedAt);
         Page<User> page = new Page<>(pageNo, pageSize);
         Page<User> userPage = userService.page(page, queryWrapper);
         Map<String, Object> map = new HashMap<>();

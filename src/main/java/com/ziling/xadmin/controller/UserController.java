@@ -103,7 +103,7 @@ public class UserController {
         }
         // 校验用户手机号对应的用户已经存在了
         if (userService.getOne(queryWrapper) != null) {
-            return R.fail("用户手机号已经存在");
+            return R.fail("该用户手机号【"+user.getPhone()+"】已经存在");
         }
         userService.save(user);
         return R.success("添加用户成功");

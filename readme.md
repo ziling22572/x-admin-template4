@@ -31,3 +31,5 @@
 - 接口监控：Fuse
 - 接口监控：Fault Tolerance
 - 接口监控：Fault Tolerance
+
+# 默认账号：alice｜加密前密码：password123｜数据库密码：$2a$10$8NkNLWv82CNwJ2p/qloaB.j7iH79scklHFfeDul7u4BfwvBduH95i

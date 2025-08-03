@@ -13,6 +13,7 @@ import com.ziling.xadmin.utils.JwtUtil;
 import com.ziling.xadmin.utils.RedisUtil;
 import com.ziling.xadmin.vo.UserDeptVO;
 import com.ziling.xadmin.vo.UserRoleVO;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -35,21 +36,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private JwtUtil jwtUtil;
     @Resource
     private UserRoleService userRoleService;
+    @Resource
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public Map<String, Object> login(User user) {
         Map<String, Object> resultMap = new HashMap<>();
         // 通过用户名查询用户信息
-        User dbUser = this.getOne(new LambdaQueryWrapper<User>().eq(User::getUsername, user.getUsername()).eq(User::getPassword, user.getPassword()));
-        if (dbUser == null) {
-            resultMap.put("msg", "用户名或密码错误");
+        User dbUser = this.getOne(new LambdaQueryWrapper<User>().eq(User::getUsername, user.getUsername()));
+        if (dbUser == null|| ! passwordEncoder.matches(user.getPassword(), dbUser.getPassword())) {
+            resultMap.put("message", "用户名或密码错误");
             resultMap.put("code", "20001");
             return resultMap;
         }
         UserInfo userInfo = new UserInfo();
         userInfo.setId(dbUser.getId());
         userInfo.setUsername(dbUser.getUsername());
-        userInfo.setPassword(dbUser.getPassword());
+//        userInfo.setPassword(dbUser.getPassword());
         // 获取用户角色信息
         List<UserRoleVO> userRoleVOS = userRoleService.listUserRole(dbUser.getId());
         userInfo.setRoles(userRoleVOS.size() > 0 ? userRoleVOS:new ArrayList<>());

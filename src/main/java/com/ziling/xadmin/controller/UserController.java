@@ -6,13 +6,21 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ziling.xadmin.common.R;
 import com.ziling.xadmin.entity.Menu;
 import com.ziling.xadmin.entity.User;
+import com.ziling.xadmin.entity.UserDept;
+import com.ziling.xadmin.entity.UserRole;
 import com.ziling.xadmin.pojo.UserInfo;
+import com.ziling.xadmin.service.UserDeptService;
+import com.ziling.xadmin.service.UserRoleService;
 import com.ziling.xadmin.service.UserService;
 import com.ziling.xadmin.utils.JwtUtil;
 import com.ziling.xadmin.vo.UserDeptVO;
 import com.ziling.xadmin.vo.UserRoleVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,14 +43,20 @@ public class UserController {
     @Resource
     private UserService userService;
     @Resource
+    private UserRoleService userRoleService;
+    @Resource
+    private UserDeptService userDeptService;
+    @Resource
     private JwtUtil jwtUtil;
+    @Resource
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public R<Map<String, Object>> login(@RequestBody User user) {
-        // 校验用户名和密码
         if (user.getUsername() == null || user.getPassword() == null) {
             return R.fail("用户名或密码不能为空");
         }
+        // 校验用户名和密码
         Map<String, Object> resultMap = userService.login(user);
         return R.data(resultMap);
     }
@@ -94,19 +108,88 @@ public class UserController {
         return R.data(map);
     }
 
-    @PostMapping("/add")
-    @ApiModelProperty(value = "用户列表")
+    @GetMapping("/{id}")
+    private R<User> getUserById(@PathVariable("id") Integer id){
+        User user = userService.getById(id);
+        return R.data(user);
+    }
+
+    @PostMapping("/submit")
+    @ApiOperation(value = "新增或更新用户", notes = "添加新用户或更新已有用户信息")
     public R addUser(@RequestBody User user) {
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        if (StringUtils.hasLength(user.getPhone())) {
-            queryWrapper.eq(User::getPhone, user.getPhone());
+        String info="用户新增成功";
+        // 新用户操作 (id == null)
+        if (user.getId() == null) {
+            // 检查用户名是否已存在
+            LambdaQueryWrapper<User> queryWrapper1 = new LambdaQueryWrapper<>();
+            if (StringUtils.hasLength(user.getUsername())) {
+                queryWrapper1.eq(User::getUsername, user.getUsername());
+            }
+            if (userService.getOne(queryWrapper1) != null) {
+                return R.fail("该用户名【" + user.getUsername() + "】已被注册");
+            }
+            // 检查手机号是否已存在
+            LambdaQueryWrapper<User> queryWrapper2 = new LambdaQueryWrapper<>();
+            if (StringUtils.hasLength(user.getPhone())) {
+                queryWrapper2.eq(User::getPhone, user.getPhone());
+            }
+            if (userService.getOne(queryWrapper2) != null) {
+                return R.fail("该用户手机号【" + user.getPhone() + "】已被注册");
+            }
+            // 加密密码并保存新用户
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userService.save(user);
+
+        } else {
+            // 更新用户操作 (id != null)
+            user.setPassword(null); // 不更新密码
+            // 排除当前记录进行更新时的唯一性检查
+            LambdaQueryWrapper<User> queryWrapper1 = new LambdaQueryWrapper<>();
+            if (StringUtils.hasLength(user.getUsername())) {
+                queryWrapper1.eq(User::getUsername, user.getUsername());
+                queryWrapper1.ne(User::getId, user.getId()); // 排除当前用户
+            }
+            if (userService.getOne(queryWrapper1) != null) {
+                return R.fail("该用户名【" + user.getUsername() + "】已被注册");
+            }
+
+            // 检查手机号是否已被其他用户使用
+            LambdaQueryWrapper<User> queryWrapper2 = new LambdaQueryWrapper<>();
+            if (StringUtils.hasLength(user.getPhone())) {
+                queryWrapper2.eq(User::getPhone, user.getPhone());
+                queryWrapper2.ne(User::getId, user.getId()); // 排除当前用户
+            }
+            if (userService.getOne(queryWrapper2) != null) {
+                return R.fail("该手机号【" + user.getPhone() + "】已被注册");
+            }
+
+            // 更新其他用户信息
+            userService.updateById(user);
+            info="用户更新成功";
         }
-        // 校验用户手机号对应的用户已经存在了
-        if (userService.getOne(queryWrapper) != null) {
-            return R.fail("该用户手机号【"+user.getPhone()+"】已经存在");
+        return R.success(info);
+    }
+
+
+    @DeleteMapping("/removeById")
+    public R removeById(@RequestParam("id") Integer id) {
+        // 执行删除逻辑
+        if (id == null) {
+            return R.fail("ID不能为空");
         }
-        userService.save(user);
-        return R.success("添加用户成功");
+        // 校验是否绑定了角色、部门
+        LambdaQueryWrapper<UserRole> queryWrapper1 = new LambdaQueryWrapper<>();
+        queryWrapper1.eq(UserRole::getUserId, id);
+        if (userRoleService.count(queryWrapper1) > 0) {
+            return R.fail("该用户已绑定角色，请先解除绑定");
+        }
+        LambdaQueryWrapper<UserDept> queryWrapper2 = new LambdaQueryWrapper<>();
+        queryWrapper2.eq(UserDept::getUserId, id);
+        if (userDeptService.count(queryWrapper2) > 0) {
+            return R.fail("该用户已绑定部门，请先解除绑定");
+        }
+        boolean handleFlag = userService.removeById(id);
+        return R.status(handleFlag);
     }
 
 

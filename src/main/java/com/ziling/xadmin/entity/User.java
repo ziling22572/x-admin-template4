@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author ziling
@@ -48,10 +48,10 @@ public class User implements Serializable {
     private String phone;
 
     @TableField("status")
-    private Byte status;
+    private Integer status;
 
     @TableField("sex")
-    private Byte sex;
+    private Integer sex;
 
     @TableField("created_at")
     private LocalDateTime createdAt;

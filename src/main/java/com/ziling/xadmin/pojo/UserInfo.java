@@ -27,10 +27,14 @@ public class UserInfo extends User {
     //用户菜单
     private List<Menu> menus;
 
-    public UserInfo(Long userId, String username, String phone, List<UserRoleVO> roles, List<UserDeptVO> depts, List<Menu> menus) {
+    public UserInfo(Long userId, String username,String avatar, String phone, List<UserRoleVO> roles, List<UserDeptVO> depts, List<Menu> menus) {
         this.roles = roles;
         this.depts = depts;
         this.menus = menus;
+        this.setId(userId);
+        this.setUsername(username);
+        this.setAvatar(avatar);
+        this.setPhone(phone);
         this.setRoles(roles);
         this.setDepts(depts);
         this.setMenus(menus);

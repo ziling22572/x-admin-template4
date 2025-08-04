@@ -18,6 +18,7 @@ import com.ziling.xadmin.vo.UserRoleVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,6 +37,7 @@ import java.util.Map;
  * @author ziling
  * @since 2025-06-26
  */
+@ApiOperation(value = "用户管理")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -52,17 +54,21 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
+    @ApiOperation(value = "用户登录")
     public R<Map<String, Object>> login(@RequestBody User user) {
         if (user.getUsername() == null || user.getPassword() == null) {
             return R.fail("用户名或密码不能为空");
         }
         // 校验用户名和密码
         Map<String, Object> resultMap = userService.login(user);
+        if (resultMap != null&&resultMap.get("code") != null && resultMap.get("code") != "20000") {
+            return R.fail((String) resultMap.get("message"));
+        }
         return R.data(resultMap);
     }
 
     @PostMapping("/logout")
-    @ApiModelProperty(value = "退出登录")
+    @ApiOperation(value = "退出登录")
     public R<Map<String, Object>> logout(@RequestHeader("X-Token") String token) {
         if (token == null) {
             return R.fail("token不能为空");
@@ -76,21 +82,14 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    @ApiModelProperty(value = "获取用户信息")
+    @ApiOperation(value = "获取用户信息")
     public R info(@RequestHeader("X-Token") String token) {
-        UserInfo currentUser = jwtUtil.getCurrentUser(token);
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", currentUser.getUsername());
-        map.put("avatar", currentUser.getAvatar());
-        map.put("roles", currentUser.getRoles().stream().map(UserRoleVO::getRoleName).distinct().toArray());
-        map.put("depts", currentUser.getDepts().stream().map(UserDeptVO::getDeptName).distinct().toArray());
-        map.put("menus", currentUser.getMenus().stream().map(Menu::getName).distinct().toArray());
-        return R.data(map);
+        return R.data(  userService.getUserInfo(token));
     }
 
 
     @GetMapping("/list")
-    @ApiModelProperty(value = "用户列表")
+    @ApiOperation(value = "用户列表")
     public R getUserList(@RequestParam(value = "pageNo", required = false) Long pageNo, @RequestParam(value = "pageSize", required = false) Long pageSize, User user) {
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.hasLength(user.getUsername())) {
@@ -98,6 +97,9 @@ public class UserController {
         }
         if (StringUtils.hasLength(user.getPhone())) {
             queryWrapper.like(User::getPhone, user.getPhone());
+        }
+        if (user.getStatus() != null) {
+            queryWrapper.eq(User::getStatus, user.getStatus());
         }
         queryWrapper.orderByDesc(User::getCreatedAt);
         Page<User> page = new Page<>(pageNo, pageSize);
@@ -109,6 +111,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @ApiOperation(value = "获取用户详情")
     private R<User> getUserById(@PathVariable("id") Integer id){
         User user = userService.getById(id);
         return R.data(user);
@@ -116,7 +119,7 @@ public class UserController {
 
     @PostMapping("/submit")
     @ApiOperation(value = "新增或更新用户", notes = "添加新用户或更新已有用户信息")
-    public R addUser(@RequestBody User user) {
+    public R submit(@RequestBody User user) {
         String info="用户新增成功";
         // 新用户操作 (id == null)
         if (user.getId() == null) {
@@ -172,6 +175,7 @@ public class UserController {
 
 
     @DeleteMapping("/removeById")
+    @ApiOperation(value = "删除用户")
     public R removeById(@RequestParam("id") Integer id) {
         // 执行删除逻辑
         if (id == null) {

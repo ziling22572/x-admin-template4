@@ -1,11 +1,11 @@
 package com.ziling.xadmin.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -33,12 +33,21 @@ public class Role implements Serializable {
     @TableField("name")
     private String name;
 
+    @TableField("role_code")
+    private String roleCode;
+
     @TableField("description")
     private String description;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField("created_at")
     private LocalDateTime createdAt;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField("updated_at")
     private LocalDateTime updatedAt;
+
+    @TableLogic
+    @TableField("deleted")
+    private Integer deleted;
 }

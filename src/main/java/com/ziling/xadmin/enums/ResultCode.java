@@ -23,7 +23,8 @@ public enum ResultCode implements IResultCode {
     PARAM_TYPE_ERROR(400, "请求参数类型错误"),
     PARAM_BIND_ERROR(400, "请求参数绑定错误"),
     PARAM_VALID_ERROR(400, "参数校验失败"),
-    WARNING_BIZ_NOT_ALLOW(600, "当前操作不能被业务允许");
+    WARNING_BIZ_NOT_ALLOW(600, "当前操作不能被业务允许"),
+    JWT_ERROR(20003, "登录过期，请重新登录");
 
     final int code;
     final String message;

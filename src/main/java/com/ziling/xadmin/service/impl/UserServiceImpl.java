@@ -49,9 +49,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             resultMap.put("code", "20001");
             return resultMap;
         }
+        if (dbUser.getStatus() != 1) {
+            resultMap.put("message", "该用户已被禁用");
+            resultMap.put("code", "20001");
+            return resultMap;
+        }
+
         UserInfo userInfo = new UserInfo();
         userInfo.setId(dbUser.getId());
         userInfo.setUsername(dbUser.getUsername());
+        userInfo.setAvatar(dbUser.getAvatar());
 //        userInfo.setPassword(dbUser.getPassword());
         // 获取用户角色信息
         List<UserRoleVO> userRoleVOS = userRoleService.listUserRole(dbUser.getId());
@@ -66,9 +73,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             userInfo.setMenus(menus);
         }
         // 生成token
-        String token = jwtUtil.generateToken(userInfo);
+        String token = jwtUtil.createToken(userInfo);
         // 将token存入redis
-        redisUtil.set(Constant.LOGIN_JWT_KEY + ":userId:" + userInfo.getId(), token, 60 * 60);
+        redisUtil.set(Constant.LOGIN_JWT_KEY + ":userId:" + userInfo.getId(), token,  60 * 60);
         resultMap.put("token", token);
         resultMap.put("userInfo", userInfo);
         return resultMap;
@@ -78,5 +85,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void logout(String token) {
         // 清除redis中的token
         redisUtil.delete(Constant.LOGIN_JWT_KEY + ":userId:" + jwtUtil.getUserId(token));
+    }
+
+    @Override
+    public Map<String, Object> getUserInfo(String token) {
+        Map<String, Object> resultMap = new HashMap<>();
+        // 解析token
+        UserInfo userInfo = null;
+        try {
+            userInfo = jwtUtil.parseToken(token, UserInfo.class);
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+        // 从redis中获取用户信息
+//        UserInfo dbUserInfo = (UserInfo) redisUtil.get(Constant.LOGIN_JWT_KEY + ":userId:" + userInfo.getId());
+        resultMap.put("userId", userInfo.getId());
+        resultMap.put("name", userInfo.getUsername());
+        resultMap.put("avatar", userInfo.getAvatar());
+        resultMap.put("roles", userInfo.getRoles());
+        resultMap.put("menus", userInfo.getMenus());
+        resultMap.put("depts", userInfo.getDepts());
+        return resultMap;
     }
 }

@@ -81,9 +81,9 @@ create table x_user
     constraint username
         unique (username)
 );
-INSERT INTO `x-admin-template`.x_user (id, user_name, password, avatar, email, phone, status,sex, created_at, updated_at) VALUES (1, 'alice', '$2a$10$8NkNLWv82CNwJ2p/qloaB.j7iH79scklHFfeDul7u4BfwvBduH95i', 'https://example.com/avatar/alice.png', 'alice@example.com', '1234567890', 1, 1,'2025-06-12 18:25:23', '2025-06-12 18:25:23');
-INSERT INTO `x-admin-template`.x_user (id, user_name, password, avatar, email, phone, status,sex, created_at, updated_at) VALUES (2, 'bob', '$2a$10$8NkNLWv82CNwJ2p/qloaB.j7iH79scklHFfeDul7u4BfwvBduH95i', 'https://example.com/avatar/bob.png', 'bob@example.com', '2345678901', 1,1, '2025-06-12 18:25:23', '2025-06-12 18:25:23');
-INSERT INTO `x-admin-template`.x_user (id, user_name, password, avatar, email, phone, status,sex, created_at, updated_at) VALUES (3, 'charlie', '$2a$10$8NkNLWv82CNwJ2p/qloaB.j7iH79scklHFfeDul7u4BfwvBduH95i', 'https://example.com/avatar/charlie.png', 'charlie@example.com', '3456789012', 1,1, '2025-06-12 18:25:23', '2025-06-12 18:25:23');
+INSERT INTO `x-admin-template`.x_user (id, user_name, password, avatar, email, phone, status,sex, created_at, updated_at) VALUES (1, 'alice', '$2a$10$8NkNLWv82CNwJ2p/qloaB.j7iH79scklHFfeDul7u4BfwvBduH95i', 'https://avatars.githubusercontent.com/u/35021566?v=4', 'alice@example.com', '1234567890', 1, 1,'2025-06-12 18:25:23', '2025-06-12 18:25:23');
+INSERT INTO `x-admin-template`.x_user (id, user_name, password, avatar, email, phone, status,sex, created_at, updated_at) VALUES (2, 'bob', '$2a$10$8NkNLWv82CNwJ2p/qloaB.j7iH79scklHFfeDul7u4BfwvBduH95i', 'https://avatars.githubusercontent.com/u/35021566?v=4', 'bob@example.com', '2345678901', 1,1, '2025-06-12 18:25:23', '2025-06-12 18:25:23');
+INSERT INTO `x-admin-template`.x_user (id, user_name, password, avatar, email, phone, status,sex, created_at, updated_at) VALUES (3, 'charlie', '$2a$10$8NkNLWv82CNwJ2p/qloaB.j7iH79scklHFfeDul7u4BfwvBduH95i', 'https://avatars.githubusercontent.com/u/35021566?v=4', 'charlie@example.com', '3456789012', 1,1, '2025-06-12 18:25:23', '2025-06-12 18:25:23');
 
 
 create table x_user_dept
@@ -109,4 +109,19 @@ create table x_user_role
 INSERT INTO `x-admin-template`.x_user_role (id, user_id, role_id, created_at) VALUES (1, 1, 1, '2025-06-12 18:25:24');
 INSERT INTO `x-admin-template`.x_user_role (id, user_id, role_id, created_at) VALUES (2, 2, 2, '2025-06-12 18:25:24');
 INSERT INTO `x-admin-template`.x_user_role (id, user_id, role_id, created_at) VALUES (3, 3, 3, '2025-06-12 18:25:24');
+
+
+-- 补充逻辑删除字段
+alter table x_dept    add deleted int default 0 null comment '逻辑未删除值默认为 0，逻辑已删除值默认为 1';
+alter table x_menu    add deleted int default 0 null comment '逻辑未删除值默认为 0，逻辑已删除值默认为 1';
+alter table x_role    add deleted int default 0 null comment '逻辑未删除值默认为 0，逻辑已删除值默认为 1';
+alter table x_role_menu    add deleted int default 0 null comment '逻辑未删除值默认为 0，逻辑已删除值默认为 1';
+alter table x_user    add deleted int default 0 null comment '逻辑未删除值默认为 0，逻辑已删除值默认为 1';
+alter table x_user_dept    add deleted int default 0 null comment '逻辑未删除值默认为 0，逻辑已删除值默认为 1';
+alter table x_user_role    add deleted int default 0 null comment '逻辑未删除值默认为 0，逻辑已删除值默认为 1';
+
+alter table x_menu    add menu_code varchar(20) not null comment '菜单编码';
+alter table x_role    add role_code varchar(20) not null comment '角色编码';
+
+alter table x_menu    alter column parent_id set default 0;
 

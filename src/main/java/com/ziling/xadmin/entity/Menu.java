@@ -1,9 +1,7 @@
 package com.ziling.xadmin.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -36,6 +34,9 @@ public class Menu implements Serializable {
     @TableField("name")
     private String name;
 
+    @TableField("menu_code")
+    private String menuCode;
+
     @TableField("path")
     private String path;
 
@@ -65,4 +66,8 @@ public class Menu implements Serializable {
     )
     @TableField("updated_at")
     private LocalDateTime updatedAt;
+
+    @TableLogic
+    @TableField("deleted")
+    private Integer deleted;
 }

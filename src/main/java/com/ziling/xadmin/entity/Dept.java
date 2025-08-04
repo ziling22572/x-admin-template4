@@ -1,9 +1,7 @@
 package com.ziling.xadmin.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import io.swagger.annotations.ApiModel;
@@ -40,4 +38,8 @@ public class Dept implements Serializable {
 
     @TableField("updated_at")
     private LocalDateTime updatedAt;
+
+    @TableLogic
+    @TableField("deleted")
+    private Integer deleted;
 }

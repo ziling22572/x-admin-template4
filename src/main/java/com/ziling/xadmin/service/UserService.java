@@ -18,4 +18,6 @@ public interface UserService extends IService<User> {
     Map<String,Object> login(User user);
 
     void logout(String token);
+
+    Map<String,Object> getUserInfo(String token);
 }

@@ -1,6 +1,7 @@
 package com.ziling.xadmin.service;
 
 import com.ziling.xadmin.entity.Menu;
+import com.ziling.xadmin.entity.Role;
 import com.ziling.xadmin.entity.UserRole;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ziling.xadmin.vo.UserDeptVO;
@@ -23,4 +24,6 @@ public interface UserRoleService extends IService<UserRole> {
     List<UserDeptVO> listUserDept(Long id);
 
     List<Menu> listMenuIdByRoleIds(List<Long> roleIds);
+
+    Role getRoleById(Integer id);
 }

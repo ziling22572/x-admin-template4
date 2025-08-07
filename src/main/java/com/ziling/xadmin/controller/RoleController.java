@@ -3,24 +3,24 @@ package com.ziling.xadmin.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ziling.xadmin.common.R;
-import com.ziling.xadmin.entity.Role;
-import com.ziling.xadmin.entity.User;
-import com.ziling.xadmin.entity.UserDept;
-import com.ziling.xadmin.entity.UserRole;
+import com.ziling.xadmin.entity.*;
+import com.ziling.xadmin.service.RoleMenuService;
 import com.ziling.xadmin.service.RoleService;
 import com.ziling.xadmin.service.UserRoleService;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author ziling
@@ -33,9 +33,12 @@ public class RoleController {
     private RoleService roleService;
     @Resource
     private UserRoleService userRoleService;
+    @Resource
+    private RoleMenuService roleMenuService;
+
     @GetMapping("/list")
     @ApiModelProperty(value = "角色列表")
-    public R getUserList(@RequestParam(value = "pageNo", required = false) Long pageNo, @RequestParam(value = "pageSize", required = false) Long pageSize, Role role) {
+    public R getRoleList(@RequestParam(value = "pageNo", required = false) Long pageNo, @RequestParam(value = "pageSize", required = false) Long pageSize, Role role) {
         LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.hasLength(role.getName())) {
             queryWrapper.like(Role::getName, role.getName());
@@ -49,16 +52,12 @@ public class RoleController {
         return R.data(map);
     }
 
-    @GetMapping("/{id}")
-    private R<Role> getUserById(@PathVariable("id") Integer id){
-        Role role = roleService.getById(id);
-        return R.data(role);
-    }
 
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping("/submit")
     @ApiOperation(value = "新增或更新角色", notes = "添加新角色或更新已有角色信息")
     public R submit(@RequestBody Role role) {
-        String info="角色新增成功";
+        String info = "角色新增成功";
         // 新用户操作 (id == null)
         if (role.getId() == null) {
             // 检查用户名是否已存在
@@ -69,11 +68,17 @@ public class RoleController {
             if (roleService.getOne(queryWrapper1) != null) {
                 return R.fail("该角色名【" + role.getName() + "】已存在");
             }
-
             roleService.save(role);
-
+            // 新增角色菜单关联
+            if (role.getMenuIds() != null && !role.getMenuIds().isEmpty()) {
+                roleMenuService.saveBatch(role.getMenuIds().stream().map(menuId -> {
+                    RoleMenu roleMenu = new RoleMenu();
+                    roleMenu.setRoleId(role.getId());
+                    roleMenu.setMenuId(menuId);
+                    return roleMenu;
+                }).collect(Collectors.toList()));
+            }
         } else {
-
             LambdaQueryWrapper<Role> queryWrapper1 = new LambdaQueryWrapper<>();
             if (StringUtils.hasLength(role.getName())) {
                 queryWrapper1.eq(Role::getName, role.getName());
@@ -84,7 +89,17 @@ public class RoleController {
             }
             // 更新其他用户信息
             roleService.updateById(role);
-            info="角色更新成功";
+            // 更新角色菜单关联
+            if (role.getMenuIds() != null && !role.getMenuIds().isEmpty()) {
+                roleMenuService.remove(new LambdaQueryWrapper<RoleMenu>().eq(RoleMenu::getRoleId, role.getId()));
+                roleMenuService.saveBatch(role.getMenuIds().stream().map(menuId -> {
+                    RoleMenu roleMenu = new RoleMenu();
+                    roleMenu.setRoleId(role.getId());
+                    roleMenu.setMenuId(menuId);
+                    return roleMenu;
+                }).collect(Collectors.toList()));
+            }
+            info = "角色更新成功";
         }
         return R.success(info);
     }
@@ -103,7 +118,10 @@ public class RoleController {
             return R.fail("该角色已绑定用户，请先解除绑定");
         }
         boolean handleFlag = roleService.removeById(id);
+        // 删除角色菜单关联
+        roleMenuService.remove(new LambdaQueryWrapper<RoleMenu>().eq(RoleMenu::getRoleId, id));
         return R.status(handleFlag);
     }
+
 
 }

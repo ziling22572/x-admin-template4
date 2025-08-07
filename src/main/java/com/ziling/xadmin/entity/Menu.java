@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -70,4 +71,9 @@ public class Menu implements Serializable {
     @TableLogic
     @TableField("deleted")
     private Integer deleted;
+
+    @TableField(exist = false)
+    private List<Menu> children;
+
+
 }

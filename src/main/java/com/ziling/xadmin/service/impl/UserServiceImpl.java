@@ -57,6 +57,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         UserInfo userInfo = new UserInfo();
         userInfo.setId(dbUser.getId());
+        userInfo.setPhone(dbUser.getPhone());
         userInfo.setUsername(dbUser.getUsername());
         userInfo.setAvatar(dbUser.getAvatar());
 //        userInfo.setPassword(dbUser.getPassword());
@@ -101,6 +102,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 //        UserInfo dbUserInfo = (UserInfo) redisUtil.get(Constant.LOGIN_JWT_KEY + ":userId:" + userInfo.getId());
         resultMap.put("userId", userInfo.getId());
         resultMap.put("name", userInfo.getUsername());
+        resultMap.put("phone", userInfo.getPhone());
         resultMap.put("avatar", userInfo.getAvatar());
         resultMap.put("roles", userInfo.getRoles());
         resultMap.put("menus", userInfo.getMenus());

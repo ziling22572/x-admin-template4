@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -50,4 +51,8 @@ public class Role implements Serializable {
     @TableLogic
     @TableField("deleted")
     private Integer deleted;
+
+    @ApiModelProperty(value = "菜单ID列表")
+    @TableField(exist = false)
+    private List<Long> menuIds;
 }

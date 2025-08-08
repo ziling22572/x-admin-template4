@@ -70,7 +70,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
         Set<Long> resultMenuIds = new HashSet<>();
         for (Long menuId : assignedMenuIds) {
             Menu menu = findMenuById(allMenus, menuId);
-            if (menu != null && menu.getParentId() != 0) {
+            if (menu != null && (menu.getParentId() != 0 || menu.getName() .equals( "首页"))) {
                 resultMenuIds.add(menuId);
                 collectChildMenuIds(menuId, parentIdMap, resultMenuIds);
             }
@@ -78,6 +78,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
         role.setMenuIds(new ArrayList<>(resultMenuIds));
         return role;
     }
+
 
     private Menu findMenuById(List<Menu> menus, Long id) {
         for (Menu m : menus) {
@@ -95,5 +96,19 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
                 collectChildMenuIds(child.getId(), parentIdMap, result);
             }
         }
+    }
+
+
+    @Override
+    public List<Menu> getMenusByUserId(Long userId) {
+        List<Menu> parentMenus = baseMapper.listRoleIdByUserId(userId,0);
+        if (parentMenus.isEmpty()) {
+            return new ArrayList<>();
+        }
+        for (Menu parent : parentMenus) {
+            List<Menu> childMenus = baseMapper.listRoleIdByUserId(userId,parent.getId().intValue());
+            parent.setChildren(childMenus);
+        }
+        return parentMenus;
     }
 }

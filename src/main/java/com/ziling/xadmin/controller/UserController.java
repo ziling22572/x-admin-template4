@@ -22,12 +22,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -41,7 +45,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
     @Resource
     private UserService userService;
     @Resource
@@ -114,9 +117,16 @@ public class UserController {
     @ApiOperation(value = "获取用户详情")
     private R<User> getUserById(@PathVariable("id") Integer id){
         User user = userService.getById(id);
+        if (user == null) {
+            return R.fail("用户不存在");
+        }
+        // 查询用户角色
+        List<Long> roleIds = userRoleService.list(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, id)).stream().map(UserRole::getRoleId).collect(Collectors.toList());
+        user.setRoleIds(!roleIds.isEmpty() ? roleIds : new ArrayList<>());
         return R.data(user);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping("/submit")
     @ApiOperation(value = "新增或更新用户", notes = "添加新用户或更新已有用户信息")
     public R submit(@RequestBody User user) {
@@ -141,6 +151,13 @@ public class UserController {
             }
             // 加密密码并保存新用户
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            // 更新用户角色
+            user.getRoleIds().forEach(roleId -> {
+                UserRole userRole = new UserRole();
+                userRole.setUserId(user.getId());
+                userRole.setRoleId(roleId);
+                userRoleService.save(userRole);
+            });
             userService.save(user);
 
         } else {
@@ -165,7 +182,14 @@ public class UserController {
             if (userService.getOne(queryWrapper2) != null) {
                 return R.fail("该手机号【" + user.getPhone() + "】已被注册");
             }
-
+            // 更新用户角色
+            userRoleService.remove(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, user.getId()));
+            user.getRoleIds().forEach(roleId -> {
+                UserRole userRole = new UserRole();
+                userRole.setUserId(user.getId());
+                userRole.setRoleId(roleId);
+                userRoleService.save(userRole);
+            });
             // 更新其他用户信息
             userService.updateById(user);
             info="用户更新成功";

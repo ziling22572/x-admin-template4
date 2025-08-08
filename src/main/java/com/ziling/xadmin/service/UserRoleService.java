@@ -26,4 +26,6 @@ public interface UserRoleService extends IService<UserRole> {
     List<Menu> listMenuIdByRoleIds(List<Long> roleIds);
 
     Role getRoleById(Integer id);
+
+    List<Menu> getMenusByUserId(Long userId);
 }

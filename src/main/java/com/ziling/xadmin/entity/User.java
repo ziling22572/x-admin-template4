@@ -3,12 +3,14 @@ package com.ziling.xadmin.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -62,4 +64,8 @@ public class User implements Serializable {
     @TableLogic
     @TableField("deleted")
     private Integer deleted;
+
+    @ApiModelProperty(value = "角色ID列表")
+    @TableField(exist = false)
+    private List<Long> roleIds;
 }

@@ -28,6 +28,8 @@ mybatis-plus:
       logic-delete-field: deleted # 全局逻辑删除字段名
       logic-delete-value: 1 # 逻辑已删除值。可选，默认值为 1
       logic-not-delete-value: 0 # 逻辑未删除值。可选，默认值为 0
+  type-aliases-package: com.ziling.xadmin.entity
+  mapper-locations: classpath*:/mapper/**/*.xml
 
 logging:
   level:

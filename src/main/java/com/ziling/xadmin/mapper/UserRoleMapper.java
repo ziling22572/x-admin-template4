@@ -26,4 +26,6 @@ public interface UserRoleMapper extends BaseMapper<UserRole> {
     List<UserDeptVO> selectUserDept(@Param(value = "userId") Long userId);
 
     List<Menu> listMenuIdByRoleIds(@Param(value = "roleIds")  List<Long> roleIds);
+
+    List<Menu> listRoleIdByUserId(@Param(value = "userId")  Long userId,@Param(value = "parentId")  Integer parentId );
 }

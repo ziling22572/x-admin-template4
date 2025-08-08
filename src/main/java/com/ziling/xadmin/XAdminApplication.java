@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 
 @EnableOpenApi
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.ziling.xadmin")
 public class XAdminApplication {
 
     public static void main(String[] args) {

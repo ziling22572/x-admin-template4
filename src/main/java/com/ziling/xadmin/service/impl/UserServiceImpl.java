@@ -105,7 +105,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         resultMap.put("phone", userInfo.getPhone());
         resultMap.put("avatar", userInfo.getAvatar());
         resultMap.put("roles", userInfo.getRoles());
-        resultMap.put("menus", userInfo.getMenus());
+       List<Menu> menus= userRoleService.getMenusByUserId(userInfo.getId());
+        resultMap.put("menus", menus);
         resultMap.put("depts", userInfo.getDepts());
         return resultMap;
     }

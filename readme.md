@@ -11,7 +11,8 @@
 ### 后端：Spring Boot + Mybatis Plus + MySQL + Redis + JWT + Spring Security
 ### 关键技术实现：
 - 跨域问题：通过配置CORS解决跨域问题
-- 登录拦截：基于JWT的登录认证
+- 登录拦截：基于JWT的登录认证（带token和token过期）
+- JWT有效期动态延长+刷新token机制(前端动态刷新本地cookie的token)
 - 动态路由：根据用户角色动态生成路由
 - 
 ### 接口工具：swagger-ui 入口：http://localhost:9999/swagger-ui/index.html

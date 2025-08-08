@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -123,5 +124,10 @@ public class RoleController {
         return R.status(handleFlag);
     }
 
+    @GetMapping("/all")
+    @ApiOperation(value = "角色列表", notes = "获取角色列表")
+    public R<List<Role>> all() {
+        return R.data(roleService.list());
+    }
 
 }

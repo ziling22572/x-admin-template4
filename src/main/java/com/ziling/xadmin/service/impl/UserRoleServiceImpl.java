@@ -105,10 +105,18 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
         if (parentMenus.isEmpty()) {
             return new ArrayList<>();
         }
+        getChildrenMenus(userId, parentMenus);
+        return parentMenus;
+    }
+
+    public void getChildrenMenus(Long userId, List<Menu> parentMenus) {
         for (Menu parent : parentMenus) {
             List<Menu> childMenus = baseMapper.listRoleIdByUserId(userId,parent.getId().intValue());
             parent.setChildren(childMenus);
+            // todo 递归查询子菜单
+            if (!childMenus.isEmpty()) {
+                getChildrenMenus(userId, childMenus);
+            }
         }
-        return parentMenus;
     }
 }

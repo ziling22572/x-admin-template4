@@ -35,7 +35,7 @@
         ORDER BY m.order_num ASC
     </select>
     <select id="listRoleIdByUserId" resultType="com.ziling.xadmin.entity.Menu">
-        select m.* from x_menu m, x_role_menu rm , x_user_role ur
+        select distinct m.* from x_menu m, x_role_menu rm , x_user_role ur
         where m.id = rm.menu_id and ur.role_id = rm.role_id
         and ur.user_id = #{userId} and m.parent_id = #{parentId}
     </select>

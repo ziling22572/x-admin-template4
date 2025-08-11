@@ -26,13 +26,13 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     public List<Menu> listTree(Menu menu) {
         String name = menu.getName();
-        String menuCode = menu.getMenuCode();
+        String title = menu.getTitle();
         LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.hasLength(name)) {
             queryWrapper.like(Menu::getName, name);
         }
-        if (StringUtils.hasLength(menuCode)) {
-            queryWrapper.like(Menu::getMenuCode, menuCode);
+        if (StringUtils.hasLength(title)) {
+            queryWrapper.like(Menu::getTitle, title);
         }
         queryWrapper.orderByAsc(Menu::getOrderNum);
         List<Menu> menus = baseMapper.selectList(queryWrapper);

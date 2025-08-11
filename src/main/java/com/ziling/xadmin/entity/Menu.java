@@ -35,8 +35,14 @@ public class Menu implements Serializable {
     @TableField("name")
     private String name;
 
-    @TableField("menu_code")
-    private String menuCode;
+    @TableField("component")
+    private String component;
+
+    @TableField("redirect")
+    private String redirect;
+
+    @TableField("title")
+    private String title;
 
     @TableField("path")
     private String path;

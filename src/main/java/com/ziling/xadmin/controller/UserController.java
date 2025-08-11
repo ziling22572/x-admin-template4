@@ -115,7 +115,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "获取用户详情")
-    private R<User> getUserById(@PathVariable("id") Integer id){
+    public R<User> getUserById(@PathVariable("id") Integer id){
         User user = userService.getById(id);
         if (user == null) {
             return R.fail("用户不存在");

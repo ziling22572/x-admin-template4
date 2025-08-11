@@ -125,3 +125,24 @@ alter table x_role    add role_code varchar(20) not null comment '角色编码';
 
 alter table x_menu    alter column parent_id set default 0;
 
+alter table x_menu    modify name varchar(64) not null comment '菜单编码';
+alter table x_menu    change menu_code component varchar(100) default 'Layout' not null comment '菜单路由层级';
+alter table x_menu    add redirect varchar(100) null comment '默认子集路由';
+alter table x_menu    add title varchar(200) not null comment '菜单名称';
+
+delete from x_menu where deleted = 0;
+INSERT INTO `x-admin-template`.x_menu (id, name, path, component, title, redirect, parent_id, icon, order_num, created_at, updated_at, deleted) VALUES (1, 'dashboard', '/', 'Layout', '首页', null, 0, 'el-icon-eleme', 1, '2025-06-12 18:25:24', '2025-08-11 15:28:58', 0);
+INSERT INTO `x-admin-template`.x_menu (id, name, path, component, title, redirect, parent_id, icon, order_num, created_at, updated_at, deleted) VALUES (2, 'users', 'users', 'sys/user', '用户管理', null, 3, 'el-icon-user', 3, '2025-06-12 18:25:24', '2025-08-11 11:16:19', 0);
+INSERT INTO `x-admin-template`.x_menu (id, name, path, component, title, redirect, parent_id, icon, order_num, created_at, updated_at, deleted) VALUES (3, 'sys', '/sys', 'Layout', '系统管理', '/sys/user', 0, 'el-icon-eleme', 2, '2025-06-12 18:25:24', '2025-08-11 09:41:56', 0);
+INSERT INTO `x-admin-template`.x_menu (id, name, path, component, title, redirect, parent_id, icon, order_num, created_at, updated_at, deleted) VALUES (4, 'role', 'role', 'sys/role', '角色管理', null, 3, 'el-icon-eleme', 4, '2025-06-12 18:25:24', '2025-08-11 11:16:19', 0);
+INSERT INTO `x-admin-template`.x_menu (id, name, path, component, title, redirect, parent_id, icon, order_num, created_at, updated_at, deleted) VALUES (5, 'dept', 'dept', 'sys/dept', '部门管理', '', 3, 'el-icon-eleme', 5, '2025-06-12 18:25:24', '2025-08-11 15:20:12', 0);
+INSERT INTO `x-admin-template`.x_menu (id, name, path, component, title, redirect, parent_id, icon, order_num, created_at, updated_at, deleted) VALUES (7, 'test', '/test', 'Layout', '测试管理', '/test/test1', 0, 'el-icon-eleme', 7, '2025-08-08 10:09:27', '2025-08-11 09:41:56', 0);
+INSERT INTO `x-admin-template`.x_menu (id, name, path, component, title, redirect, parent_id, icon, order_num, created_at, updated_at, deleted) VALUES (8, 'test1', 'test1', 'test/test1', '测试1', null, 7, 'el-icon-eleme', 8, '2025-08-08 10:09:54', '2025-08-11 11:16:19', 0);
+INSERT INTO `x-admin-template`.x_menu (id, name, path, component, title, redirect, parent_id, icon, order_num, created_at, updated_at, deleted) VALUES (9, 'test2', 'test2', 'test/test2', '测试2', null, 7, 'el-icon-eleme', 9, '2025-08-08 10:10:17', '2025-08-11 11:16:19', 0);
+INSERT INTO `x-admin-template`.x_menu (id, name, path, component, title, redirect, parent_id, icon, order_num, created_at, updated_at, deleted) VALUES (10, 'test3', 'test3', 'test/test3', '测试3', null, 7, 'el-icon-eleme', 10, '2025-08-08 10:10:58', '2025-08-11 11:16:19', 0);
+INSERT INTO `x-admin-template`.x_menu (id, name, path, component, title, redirect, parent_id, icon, order_num, created_at, updated_at, deleted) VALUES (11, 'menu', 'menu', 'sys/menu', '菜单管理', null, 3, 'el-icon-eleme', 11, '2025-08-08 10:17:04', '2025-08-11 11:16:19', 0);
+
+
+
+
+

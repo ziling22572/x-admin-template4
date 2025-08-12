@@ -38,6 +38,7 @@
         select distinct m.* from x_menu m, x_role_menu rm , x_user_role ur
         where m.id = rm.menu_id and ur.role_id = rm.role_id
         and ur.user_id = #{userId} and m.parent_id = #{parentId}
+        order by m.order_num asc
     </select>
 
 </mapper>

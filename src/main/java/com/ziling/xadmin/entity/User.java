@@ -68,4 +68,14 @@ public class User implements Serializable {
     @ApiModelProperty(value = "角色ID列表")
     @TableField(exist = false)
     private List<Long> roleIds;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "部门ID")
+    private Long deptId;
+
+    @TableField(exist = false)
+    private String deptName;
+
+    @TableField(exist = false)
+    private List<Long> deptIds;
 }

@@ -21,7 +21,7 @@
         where ur.user_id = #{userId}
     </select>
     <select id="selectUserDept" resultType="com.ziling.xadmin.vo.UserDeptVO">
-        select ud.id,ud.user_id as userId,d.name as deptName from x_user_dept ud
+        select ud.id,ud.user_id as userId,d.dept_name as deptName from x_user_dept ud
         left join x_dept d on ud.dept_id = d.id
         where ud.user_id = #{userId}
     </select>

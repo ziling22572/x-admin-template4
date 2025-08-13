@@ -1,5 +1,7 @@
 package com.ziling.xadmin.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ziling.xadmin.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -20,4 +22,6 @@ public interface UserService extends IService<User> {
     void logout(String token);
 
     Map<String,Object> getUserInfo(String token);
+
+    Page<User> pageUserInfo(Page<User> page, User user);
 }

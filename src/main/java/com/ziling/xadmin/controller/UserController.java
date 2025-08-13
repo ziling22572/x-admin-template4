@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ziling.xadmin.common.R;
-import com.ziling.xadmin.entity.Menu;
-import com.ziling.xadmin.entity.User;
-import com.ziling.xadmin.entity.UserDept;
-import com.ziling.xadmin.entity.UserRole;
+import com.ziling.xadmin.entity.*;
 import com.ziling.xadmin.pojo.UserInfo;
 import com.ziling.xadmin.service.UserDeptService;
 import com.ziling.xadmin.service.UserRoleService;
@@ -94,19 +91,8 @@ public class UserController {
     @GetMapping("/list")
     @ApiOperation(value = "用户列表")
     public R getUserList(@RequestParam(value = "pageNo", required = false) Long pageNo, @RequestParam(value = "pageSize", required = false) Long pageSize, User user) {
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        if (StringUtils.hasLength(user.getUsername())) {
-            queryWrapper.like(User::getUsername, user.getUsername());
-        }
-        if (StringUtils.hasLength(user.getPhone())) {
-            queryWrapper.like(User::getPhone, user.getPhone());
-        }
-        if (user.getStatus() != null) {
-            queryWrapper.eq(User::getStatus, user.getStatus());
-        }
-        queryWrapper.orderByDesc(User::getCreatedAt);
         Page<User> page = new Page<>(pageNo, pageSize);
-        Page<User> userPage = userService.page(page, queryWrapper);
+        Page<User> userPage = userService.pageUserInfo(page, user);
         Map<String, Object> map = new HashMap<>();
         map.put("total", userPage.getTotal());
         map.put("rows", userPage.getRecords());
@@ -123,6 +109,11 @@ public class UserController {
         // 查询用户角色
         List<Long> roleIds = userRoleService.list(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, id)).stream().map(UserRole::getRoleId).collect(Collectors.toList());
         user.setRoleIds(!roleIds.isEmpty() ? roleIds : new ArrayList<>());
+        // 查询用户部门
+        UserDept userDept = userDeptService.getOne(new LambdaQueryWrapper<UserDept>().eq(UserDept::getUserId, id));
+        if (userDept != null) {
+            user.setDeptId(userDept.getDeptId());
+        }
         return R.data(user);
     }
 
@@ -151,14 +142,21 @@ public class UserController {
             }
             // 加密密码并保存新用户
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            // 更新用户角色
+            userService.save(user);
+            // 新增用户角色
             user.getRoleIds().forEach(roleId -> {
                 UserRole userRole = new UserRole();
                 userRole.setUserId(user.getId());
                 userRole.setRoleId(roleId);
                 userRoleService.save(userRole);
             });
-            userService.save(user);
+            // 新增用户部门
+            if (user.getDeptId() != null) {
+                UserDept userDept = new UserDept();
+                userDept.setUserId(user.getId());
+                userDept.setDeptId(user.getDeptId());
+                userDeptService.save(userDept);
+            }
 
         } else {
             // 更新用户操作 (id != null)
@@ -190,6 +188,14 @@ public class UserController {
                 userRole.setRoleId(roleId);
                 userRoleService.save(userRole);
             });
+            // 更新用户部门
+            if (user.getDeptId() != null) {
+                userDeptService.remove(new LambdaQueryWrapper<UserDept>().eq(UserDept::getUserId, user.getId()));
+                UserDept userDept = new UserDept();
+                userDept.setUserId(user.getId());
+                userDept.setDeptId(user.getDeptId());
+                userDeptService.save(userDept);
+            }
             // 更新其他用户信息
             userService.updateById(user);
             info="用户更新成功";

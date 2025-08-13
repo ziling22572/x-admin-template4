@@ -1,11 +1,14 @@
 package com.ziling.xadmin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ziling.xadmin.common.Constant;
+import com.ziling.xadmin.entity.Dept;
 import com.ziling.xadmin.entity.Menu;
 import com.ziling.xadmin.entity.User;
 import com.ziling.xadmin.mapper.UserMapper;
 import com.ziling.xadmin.pojo.UserInfo;
+import com.ziling.xadmin.service.DeptService;
 import com.ziling.xadmin.service.UserRoleService;
 import com.ziling.xadmin.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -38,6 +41,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private UserRoleService userRoleService;
     @Resource
     private PasswordEncoder passwordEncoder;
+    @Resource
+    private DeptService deptService;
 
     @Override
     public Map<String, Object> login(User user) {
@@ -109,5 +114,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         resultMap.put("menus", menus);
         resultMap.put("depts", userInfo.getDepts());
         return resultMap;
+    }
+
+    @Override
+    public Page<User> pageUserInfo(Page<User> page, User user) {
+        // todo 判断 部门id不为空，则查询部门下的用户
+        if (user.getDeptId() != null) {
+        List<Long> deptIds = new ArrayList<>();
+            Dept dept = deptService.getById(user.getDeptId());
+            deptIds.add(dept.getId());
+            // 递归查询部门下的所有子部门
+            findDeptIds(dept, deptIds);
+            user.setDeptIds(deptIds);
+        }
+        return baseMapper.pageUserInfo(page, user);
+    }
+
+    private void findDeptIds(Dept dept, List<Long> deptIds) {
+        LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Dept::getParentId, dept.getId());
+        List<Dept> depts = deptService.list(queryWrapper);
+        for (Dept d : depts) {
+            if (!deptIds.contains(d.getId())) {
+                deptIds.add(d.getId());
+                findDeptIds(d, deptIds);
+            }
+        }
     }
 }

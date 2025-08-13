@@ -5,15 +5,25 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ziling.xadmin.entity.Dept">
         <id column="id" property="id" />
-        <result column="name" property="name" />
+        <result column="dept_name" property="deptName" />
         <result column="parent_id" property="parentId" />
-        <result column="created_at" property="createdAt" />
-        <result column="updated_at" property="updatedAt" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+        <result column="order_num" property="orderNum" />
+        <result column="create_by" property="createBy" />
+        <result column="update_by" property="updateBy" />
+        <result column="ancestors" property="ancestors" />
+        <result column="leader" property="leader" />
+        <result column="phone" property="phone" />
+        <result column="email" property="email" />
+        <result column="status" property="status" />
     </resultMap>
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id, name, parent_id, created_at, updated_at
-    </sql>
+
+
+    <select id="listDeptByParentId" resultType="com.ziling.xadmin.entity.Dept">
+        select * from x_dept where deleted = 0 and parent_id = #{parentId} order by order_num asc
+    </select>
 
 </mapper>

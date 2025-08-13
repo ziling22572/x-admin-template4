@@ -19,5 +19,28 @@
     <sql id="Base_Column_List">
         id, username, password, avatar, email, phone, status, created_at, updated_at
     </sql>
+    <select id="pageUserInfo" resultType="com.ziling.xadmin.entity.User">
+        select a.*, c.dept_name as deptName from x_user a left join x_user_dept b on a.id = b.user_id and b.deleted=0
+        left join x_dept c on b.dept_id = c.id and c.deleted=0
+        where a.deleted=0
+        <if test="user.username != null and user.username !=''">
+            and a.username like concat('%', #{user.username}, '%')
+        </if>
+
+        <if test="user.phone != null and user.phone !=''">
+            and phone like concat('%', #{user.phone}, '%')
+        </if>
+        <if test="user.status != null and user.status !=''">
+            and status = #{user.status}
+        </if>
+        <if test="user.deptIds != null and user.deptIds.size() > 0">
+            and c.id in
+            <foreach collection="user.deptIds" item="deptId" open="(" close=")" separator=",">
+                #{deptId}
+            </foreach>
+        </if>
+        order by a.created_at desc
+
+    </select>
 
 </mapper>

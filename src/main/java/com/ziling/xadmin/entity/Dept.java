@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.Getter;
@@ -11,7 +13,7 @@ import lombok.Setter;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author ziling
@@ -27,19 +29,49 @@ public class Dept implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @TableField("name")
-    private String name;
-
     @TableField("parent_id")
     private Long parentId;
 
-    @TableField("created_at")
-    private LocalDateTime createdAt;
+    @TableField("dept_name")
+    private String deptName;
 
-    @TableField("updated_at")
-    private LocalDateTime updatedAt;
+    @TableField("order_num")
+    private Integer orderNum;
+
+
+    @TableField("create_time")
+    private LocalDateTime createTime;
+
+    @TableField("update_time")
+    private LocalDateTime updateTime;
+
+    @TableField("create_by")
+    private String createBy;
+
+    @TableField("update_by")
+    private String updateBy;
+
+    @TableField("leader")
+    private String leader;
+
+    @TableField("phone")
+    private String phone;
+
+    @TableField("email")
+    private String email;
+
+    @TableField("status")
+    private Integer status;
+
+    @TableField("ancestors")
+    private String ancestors;
 
     @TableLogic
     @TableField("deleted")
     private Integer deleted;
+
+    @TableField(exist = false)
+    private List<Dept> children;
+
+
 }

@@ -19,6 +19,8 @@
 
 ### 默认账号：alice｜加密前密码：password123｜数据库密码：$2a$10$8NkNLWv82CNwJ2p/qloaB.j7iH79scklHFfeDul7u4BfwvBduH95i
 
+### 代码idea推送如果遇到问题：手动命令行推送
+- git push origin main
 
 ## docker 部署   
 ### 后端

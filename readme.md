@@ -23,7 +23,9 @@
 ## docker 部署   
 ### 后端
 - docker build -t xadmin-app:latest .
-- docker-compose up -d
+
+[//]: # (- Docker Compose 会自动执行 Dockerfile 来构建镜像（前提是你的 docker-compose.yml 中使用了 build: .）。 )
+- docker-compose up -d  
 ![img_2.png](img_2.png)
 ![img_3.png](img_3.png)
 ![img_4.png](img_4.png)

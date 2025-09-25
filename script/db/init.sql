@@ -47,24 +47,6 @@ INSERT INTO `x-admin-template`.x_role (id, name, description, created_at, update
 INSERT INTO `x-admin-template`.x_role (id, name, description, created_at, updated_at) VALUES (2, 'editor', 'Content Editor', '2025-06-12 18:25:23', '2025-06-12 18:25:23');
 INSERT INTO `x-admin-template`.x_role (id, name, description, created_at, updated_at) VALUES (3, 'viewer', 'Read-only User', '2025-06-12 18:25:23', '2025-06-12 18:25:23');
 
-
-create table x_role_menu
-(
-    id         bigint auto_increment
-        primary key,
-    role_id    bigint                             not null,
-    menu_id    bigint                             not null,
-    created_at datetime default CURRENT_TIMESTAMP null
-);
-INSERT INTO `x-admin-template`.x_role_menu (id, role_id, menu_id, created_at) VALUES (1, 1, 1, '2025-06-12 18:25:24');
-INSERT INTO `x-admin-template`.x_role_menu (id, role_id, menu_id, created_at) VALUES (2, 1, 2, '2025-06-12 18:25:24');
-INSERT INTO `x-admin-template`.x_role_menu (id, role_id, menu_id, created_at) VALUES (3, 1, 3, '2025-06-12 18:25:24');
-INSERT INTO `x-admin-template`.x_role_menu (id, role_id, menu_id, created_at) VALUES (4, 2, 1, '2025-06-12 18:25:24');
-INSERT INTO `x-admin-template`.x_role_menu (id, role_id, menu_id, created_at) VALUES (5, 2, 2, '2025-06-12 18:25:24');
-INSERT INTO `x-admin-template`.x_role_menu (id, role_id, menu_id, created_at) VALUES (6, 3, 1, '2025-06-12 18:25:24');
-
-
-
 create table x_user
 (
     id         bigint auto_increment
@@ -187,3 +169,30 @@ INSERT INTO `x-admin-template`.x_dept (id, parent_id, ancestors, dept_name, orde
 INSERT INTO `x-admin-template`.x_dept (id, parent_id, ancestors, dept_name, order_num, leader, phone, email, status, deleted, create_by, create_time, update_by, update_time) VALUES (107, 101, '0,100,101', '运维部门', 5, '若依', '15888888888', 'ry@qq.com', 0, 0, 'admin', '2025-02-11 14:08:38', '', null);
 INSERT INTO `x-admin-template`.x_dept (id, parent_id, ancestors, dept_name, order_num, leader, phone, email, status, deleted, create_by, create_time, update_by, update_time) VALUES (108, 102, '0,100,102', '市场部门', 1, '若依', '15888888888', 'ry@qq.com', 0, 0, 'admin', '2025-02-11 14:08:38', '', null);
 INSERT INTO `x-admin-template`.x_dept (id, parent_id, ancestors, dept_name, order_num, leader, phone, email, status, deleted, create_by, create_time, update_by, update_time) VALUES (109, 102, '0,100,102', '财务部门', 2, '若依', '15888888888', 'ry@qq.com', 0, 0, 'admin', '2025-02-11 14:08:38', '', null);
+
+
+create table x_role_menu
+(
+    id         bigint auto_increment
+        primary key,
+    role_id    bigint                             not null,
+    menu_id    bigint                             not null,
+    created_at datetime default CURRENT_TIMESTAMP null
+);
+INSERT INTO x-admin-template.x_role_menu (id, role_id, menu_id, created_at, deleted) VALUES (1, 1, 1, '2025-06-12 18:25:24', 0);
+INSERT INTO x-admin-template.x_role_menu (id, role_id, menu_id, created_at, deleted) VALUES (2, 1, 2, '2025-06-12 18:25:24', 0);
+INSERT INTO x-admin-template.x_role_menu (id, role_id, menu_id, created_at, deleted) VALUES (3, 1, 3, '2025-06-12 18:25:24', 0);
+INSERT INTO x-admin-template.x_role_menu (id, role_id, menu_id, created_at, deleted) VALUES (4, 2, 1, '2025-06-12 18:25:24', 0);
+INSERT INTO x-admin-template.x_role_menu (id, role_id, menu_id, created_at, deleted) VALUES (5, 2, 2, '2025-06-12 18:25:24', 0);
+INSERT INTO x-admin-template.x_role_menu (id, role_id, menu_id, created_at, deleted) VALUES (6, 3, 1, '2025-06-12 18:25:24', 0);
+INSERT INTO x-admin-template.x_role_menu (id, role_id, menu_id, created_at, deleted) VALUES (7, 1, 4, '2025-06-12 18:25:24', 0);
+INSERT INTO x-admin-template.x_role_menu (id, role_id, menu_id, created_at, deleted) VALUES (8, 1, 5, '2025-06-12 18:25:24', 0);
+INSERT INTO x-admin-template.x_role_menu (id, role_id, menu_id, created_at, deleted) VALUES (9, 1, 6, '2025-06-12 18:25:24', 0);
+INSERT INTO x-admin-template.x_role_menu (id, role_id, menu_id, created_at, deleted) VALUES (10, 1, 7, '2025-06-12 18:25:24', 0);
+INSERT INTO x-admin-template.x_role_menu (id, role_id, menu_id, created_at, deleted) VALUES (11, 1, 8, '2025-06-12 18:25:24', 0);
+INSERT INTO x-admin-template.x_role_menu (id, role_id, menu_id, created_at, deleted) VALUES (12, 1, 9, '2025-06-12 18:25:24', 0);
+INSERT INTO x-admin-template.x_role_menu (id, role_id, menu_id, created_at, deleted) VALUES (13, 1, 10, '2025-06-12 18:25:24', 0);
+INSERT INTO x-admin-template.x_role_menu (id, role_id, menu_id, created_at, deleted) VALUES (14, 1, 11, '2025-06-12 18:25:24', 0);
+INSERT INTO x-admin-template.x_role_menu (id, role_id, menu_id, created_at, deleted) VALUES (15, 1, 12, '2025-06-12 18:25:24', 0);
+
+

@@ -31,7 +31,8 @@ services:
       - mysql
       - redis
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/x_admin_template?useSSL=false&serverTimezone=UTC
+#      todo mysql>=8.0 连接问题：allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/x_admin_template?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: springuser # 数据库连接的用户名
       SPRING_DATASOURCE_PASSWORD: springpass # 数据库连接的密码
       SPRING_REDIS_HOST: redis

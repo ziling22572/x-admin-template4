@@ -19,3 +19,17 @@
 
 ### 默认账号：alice｜加密前密码：password123｜数据库密码：$2a$10$8NkNLWv82CNwJ2p/qloaB.j7iH79scklHFfeDul7u4BfwvBduH95i
 
+
+## docker 部署   
+### 后端
+- docker build -t xadmin-app:latest .
+- docker-compose up -d
+![img_2.png](img_2.png)
+![img_3.png](img_3.png)
+![img_4.png](img_4.png)
+- 使用：init-docker.sql脚本
+![img_5.png](img_5.png)
+### 前端
+- 项目根目录下执行：npm install
+- 项目根目录下执行：npm run build:prod
+![img_6.png](img_6.png)

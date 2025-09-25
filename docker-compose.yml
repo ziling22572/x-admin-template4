@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0.39
+    container_name: mysql-server
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass # 登录容器时root权限的密码
+      MYSQL_DATABASE: x_admin_template
+      MYSQL_USER: springuser
+      MYSQL_PASSWORD: springpass
+    ports:
+      - "33061:3306" # 映射端口，例如将容器内的3306端口映射到宿主机的33061端口 ，用33061端口访问容器内的mysql服务
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+
+  redis:
+    image: redis:latest
+    container_name: redis-server
+    ports:
+      - "63791:6379" # 映射端口，例如将容器内的6379端口映射到宿主机的63791端口 ，用63791端口访问容器内的redis服务
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  xadmin-app:
+    build: .
+    container_name: xadmin-app
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/x_admin_template?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: springuser # 数据库连接的用户名
+      SPRING_DATASOURCE_PASSWORD: springpass # 数据库连接的密码
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    ports:
+      - "9999:9999"
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+  redis_data:

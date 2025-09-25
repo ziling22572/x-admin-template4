@@ -79,7 +79,7 @@ create table x_user
     created_at datetime default CURRENT_TIMESTAMP null,
     updated_at datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
     constraint username
-        unique (username)
+        unique (user_name)
 );
 INSERT INTO `x-admin-template`.x_user (id, user_name, password, avatar, email, phone, status,sex, created_at, updated_at) VALUES (1, 'alice', '$2a$10$8NkNLWv82CNwJ2p/qloaB.j7iH79scklHFfeDul7u4BfwvBduH95i', 'https://avatars.githubusercontent.com/u/35021566?v=4', 'alice@example.com', '1234567890', 1, 1,'2025-06-12 18:25:23', '2025-06-12 18:25:23');
 INSERT INTO `x-admin-template`.x_user (id, user_name, password, avatar, email, phone, status,sex, created_at, updated_at) VALUES (2, 'bob', '$2a$10$8NkNLWv82CNwJ2p/qloaB.j7iH79scklHFfeDul7u4BfwvBduH95i', 'https://avatars.githubusercontent.com/u/35021566?v=4', 'bob@example.com', '2345678901', 1,1, '2025-06-12 18:25:23', '2025-06-12 18:25:23');

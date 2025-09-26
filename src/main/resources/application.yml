@@ -1,12 +1,11 @@
 server:
-  port: 9999
+  port: 9998
 
 spring:
+  profiles:
+    active: test  # 默认使用 test 环境
   #  数据源配置
   datasource:
-#    url: jdbc:mysql://localhost:3306/x-admin-template?useUnicode=true&characterEncoding=utf-8
-#    username: root
-#    password: root
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
@@ -15,8 +14,6 @@ spring:
   redis:
     host: ${SPRING_REDIS_HOST}
     port: ${SPRING_REDIS_PORT}
-#    host: localhost
-#    port: 6379
   logging:
     level:
       com.ziling.xaming: DEBUG

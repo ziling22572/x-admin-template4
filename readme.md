@@ -37,3 +37,4 @@
 - 项目根目录下执行：npm install
 - 项目根目录下执行：npm run build:prod
 ![img_6.png](img_6.png)
+![img_7.png](img_7.png)
